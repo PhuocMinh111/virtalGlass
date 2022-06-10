@@ -106,6 +106,8 @@ let dataGlasses = [
 //   img.alt = glass;
 //   document.getElementById("vglasses__info").appendChild(img);
 // };
+// var data = JSON.parse(localStorage.getItem("data")) || {};
+
 const displayGlass = () => {
   document.getElementById("vglassesList").innerHTML = dataGlasses.reduce(
     (content, item) => {
@@ -123,13 +125,15 @@ const displayGlass = () => {
     ""
   );
 };
-let currentGlass;
+let glassArr = [];
+let glassIndex = -1;
 function changeGlass(searchId) {
   //   console.log("searchId" + searchId);
   const glass = dataGlasses.find((item) => item.id === searchId);
   //   console.log(glass);
-  currentGlass = glass;
-
+  glassArr.push(glass);
+  glassIndex = glassArr.length - 1;
+  console.log(glassIndex);
   renderGlass(glass);
 }
 
@@ -157,15 +161,30 @@ function renderGlass(glass) {
 function removeGlasses(bool) {
   console.log(bool);
   if (bool) {
-    renderGlass(currentGlass);
+    if (glassIndex < glassArr.length - 1) glassIndex += 1;
+    renderGlass(
+      glassArr.find((_, index) => index === glassIndex) ||
+        glassArr[glassArr.length - 1]
+    );
   } else {
-    hideGlass();
+    if (glassIndex > 0) glassIndex -= 1;
+    renderGlass(
+      glassArr.find((_, index) => index === glassIndex) || glassArr[0]
+    );
   }
 }
-function hideGlass() {
-  document.getElementById("glassesInfo").style.display = "none";
-  document.querySelector("#avatar img").style.display = "none";
-}
+
 // console.log(changeGlass);
 
 displayGlass();
+
+// function setData() {
+//   localStorage.setItem(
+//     "data",
+//     JSON.stringify({
+//       _glassIndex: glassIndex,
+//       _glassArr: glassArr,
+//     })
+//   );
+// }
+// setData();
